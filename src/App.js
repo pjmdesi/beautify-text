@@ -41,6 +41,7 @@ function App() {
 		Object.keys(qaTypes).forEach(key => {
 			qaRefs.current[`${key}Input`] = React.createRef();
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// Calculates & displays line numbers next to textarea
@@ -98,8 +99,8 @@ function App() {
 			taVal = taVal.replace(/·/gm, '');
 			taVal = taVal.replace(/^.*@.*$/gm, '');
 
-			// Remove timecodes & line nimbers from beginning of lines
-			// Explaination:
+			// Remove timecode & line numbers from beginning of lines
+			// Explanation:
 			//    looks for beginning of line,
 			//    then 0 or more whitespace,
 			//    then 0 of more of the format (0 or more numbers then a colon),
@@ -281,6 +282,7 @@ function App() {
 		if (settings.auto) {
 			convert(textAreaRef.current);
 		}
+        // eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [settings]);
 
 	// Whenever text area value changes, reconfigure line numbers
@@ -288,6 +290,7 @@ function App() {
 		// Copy to clipboard
 		saveTextareaValue(textAreaValue);
 		configureLines();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [textAreaValue]);
 
 	const showInfo = () => {
@@ -474,8 +477,8 @@ function App() {
 					</label>
 				</div>
 				<div className="buttonWrap">
-					<input type="button" id="resetbtn" onClick={() => setSettings(defaultSettings)} />
-					<label htmlFor="resetbtn">
+					<input type="button" id="resetBtn" onClick={() => setSettings(defaultSettings)} />
+					<label htmlFor="resetBtn">
 						Reset Settings <Icon.ArrowCounterclockwise />
 					</label>
 				</div>

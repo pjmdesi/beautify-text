@@ -325,7 +325,7 @@ code {
 
 				&:active {
 					top: 2px;
-                    
+
 					&:after {
                         inset: 0px -1px 1px -1px;
                         box-shadow: 0px 0px 2px -1px #0003;
@@ -356,7 +356,7 @@ code {
 		pointer-events: auto;
 	}
 
-	#resetbtn + label {
+	#resetBtn + label {
 		float: right;
 	}
 
