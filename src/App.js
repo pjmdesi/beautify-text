@@ -18,6 +18,7 @@ function App() {
 		qaActive: false,
 		qaRadio: 'qaDots',
 		auto: false,
+		colorMode: 'light',
 	};
 
 	const qaTypes = {
@@ -235,6 +236,9 @@ function App() {
 	};
 
 	const removeQA = () => {
+        if (textAreaValue === '') {
+            return;
+        }
 		// Show alert to user since this is irreversible
 		if (!window.confirm('Are you sure you want to remove all Q&A labels? This action cannot be undone.')) {
 			return;
@@ -256,6 +260,10 @@ function App() {
 		saveTextareaValue(taVal);
 	};
 
+	const switchColorMode = mode => {
+		setSettings({ ...settings, colorMode: mode });
+	};
+
 	React.useEffect(() => {
 		// When window resizes
 		let win = $(window);
@@ -268,6 +276,13 @@ function App() {
 		textAreaElem.on('scroll', function () {
 			$('#counter').scrollTop(textAreaElem.scrollTop());
 		});
+
+        // Detect user color scheme preference on first load
+        if (!localStorage.getItem('buttonSettings')) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                switchColorMode('dark');
+            }
+        }
 
 		return () => {
 			win.off('resize');
@@ -282,7 +297,7 @@ function App() {
 		if (settings.auto) {
 			convert(textAreaRef.current);
 		}
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [settings]);
 
 	// Whenever text area value changes, reconfigure line numbers
@@ -290,7 +305,7 @@ function App() {
 		// Copy to clipboard
 		saveTextareaValue(textAreaValue);
 		configureLines();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [textAreaValue]);
 
 	const showInfo = () => {
@@ -298,15 +313,22 @@ function App() {
 	};
 
 	return (
-		<div id="convertCont">
+		<div id="convertCont" className={settings.colorMode === 'dark' ? 'dark-mode' : ''}>
 			<div id="header">
 				<div>
 					<h1>Beautify Text</h1>
 					<h2>Convert your transcript text into a more friendly format.</h2>
 				</div>
 				<div id="info">
-					<Icon.InfoCircle size={24} color="#00f" onClick={showInfo} />
-					<img src={logo} height="48" alt="Beautify Text Logo" />
+					{settings.colorMode === 'dark' ? (
+						<Icon.Moon size={24} color="var(--link)" onClick={() => switchColorMode('light')} />
+					) : (
+						<Icon.Sun size={24} color="var(--link)" onClick={() => switchColorMode('dark')} />
+					)}
+					<Icon.InfoCircle size={24} color="var(--link)" onClick={showInfo} />
+					<div id="siteLogo">
+						<img src={logo} height="48" alt="Beautify Text Logo" />
+					</div>
 				</div>
 			</div>
 			<hr></hr>
@@ -441,11 +463,7 @@ function App() {
 				<div className="buttonWrap">
 					<input type="button" id="qaRemove" onClick={removeQA} />
 					<label
-						htmlFor="qaRemove"
-						style={{
-							background: '#f88',
-							border: '2px solid #e99',
-						}}>
+						htmlFor="qaRemove">
 						Remove Qs/As
 					</label>
 				</div>
